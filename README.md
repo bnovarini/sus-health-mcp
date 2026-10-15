@@ -33,10 +33,11 @@ Questions are translated into the fixed tools below by your MCP client. The serv
 
 ## Run the example client
 
-Python 3.10+ is required. The code-only source bundle contains the Python package, test suite and example scripts. Materialize it in the repository root before installing:
+Python 3.10+ is required. Clone this repository, then install the Python package and example scripts:
 
 ```bash
-python3 bootstrap_source.py
+git clone https://github.com/bnovarini/sus-health-mcp.git
+cd sus-health-mcp
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[build,test]'
@@ -46,7 +47,7 @@ python scripts/query_remote.py known_care_activity \
   --arguments '{"uf":"RJ","year":2025,"view":"residence","limit":100}'
 ```
 
-On Windows, run `python bootstrap_source.py` and activate with `.venv\Scripts\activate`.
+On Windows, activate with `.venv\Scripts\activate`.
 
 Check the returned `truncated` flag. A truncated response is not a complete list. Use municipality filters where available rather than assuming the first 100 rows are exhaustive.
 
@@ -116,3 +117,5 @@ Source families come from DATASUS. This project is not affiliated with DATASUS o
 ## Development
 
 The packaged unit tests use synthetic fixtures. Hosted-artifact integration checks are deliberately excluded because their data files are not distributed. No automatic vintage replacement is performed by the serving code.
+
+The older `bootstrap_source.py` file is a legacy copy of the same source. It is not needed for setup; use the normal `src/`, `tests/` and `scripts/` tree.
