@@ -1,0 +1,16 @@
+[project]
+name = "sus-health-mcp"
+version = "0.1.0"
+description = "Read-only aggregate analytics over Brazilian public healthcare datasets"
+requires-python = ">=3.10"
+dependencies = ["duckdb>=1.0", "mcp>=1.2,<2", "uvicorn"]
+[project.optional-dependencies]
+build = ["pyreaddbc", "dbfread", "requests", "beautifulsoup4", "pandas", "numpy"]
+test = ["pytest", "httpx"]
+[project.scripts]
+sus-health-mcp = "sus_health_mcp.__main__:main"
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+where = ["src"]
