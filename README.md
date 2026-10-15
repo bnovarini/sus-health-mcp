@@ -33,10 +33,10 @@ Questions are translated into the fixed tools below by your MCP client. The serv
 
 ## Run the example client
 
-Python 3.10+ is required. The source archive contains the Python package, test suite and example scripts. Unpack it in the repository root before installing:
+Python 3.10+ is required. The code-only source bundle contains the Python package, test suite and example scripts. Materialize it in the repository root before installing:
 
 ```bash
-unzip source.zip
+python3 bootstrap_source.py
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[build,test]'
@@ -46,7 +46,7 @@ python scripts/query_remote.py known_care_activity \
   --arguments '{"uf":"RJ","year":2025,"view":"residence","limit":100}'
 ```
 
-On Windows, unpack `source.zip` with your archive utility and activate with `.venv\Scripts\activate`.
+On Windows, run `python bootstrap_source.py` and activate with `.venv\Scripts\activate`.
 
 Check the returned `truncated` flag. A truncated response is not a complete list. Use municipality filters where available rather than assuming the first 100 rows are exhaustive.
 
