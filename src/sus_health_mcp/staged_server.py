@@ -132,6 +132,20 @@ if _state_root:
   """Read first: source gaps, CID placeholders, record units, dated references and disclosure-test limits for fixed state activity."""
   return _state_api.methods()
 
+_series_root=os.getenv('SUS_SERIES_DATA','')
+if _series_root:
+ if not _state_root:raise ValueError('Annual series require the frozen state activity artifacts')
+ from .annual_series import Series
+ _series_api=Series(context_root=_series_root,state_api=_state_api)
+ @mcp.tool()
+ def annual_activity_series(kind:str,uf:str,family:str,code:str,years:list[int]=[2022,2023,2024,2025])->dict:
+  """Exact-code annual source-record intervals with population context. Not patient rates or prevalence.2026partial has no annual rate. No sums, groups or automatic trend labels."""
+  with _foundation_api.work_slot():return _series_api.series(kind,uf,family,code,years)
+ @mcp.tool()
+ def annual_series_methods()->dict:
+  """Read first: population vintage, coverage gaps, rate rounding, record units and longitudinal limits."""
+  return _series_api.methods()
+
 for t in mcp._tool_manager.list_tools():
  t.fn_metadata.arg_model.model_config={**t.fn_metadata.arg_model.model_config,'extra':'forbid','strict':True};t.fn_metadata.arg_model.model_rebuild(force=True);t.parameters=t.fn_metadata.arg_model.model_json_schema()
 
