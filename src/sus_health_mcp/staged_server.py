@@ -116,6 +116,22 @@ if _foundation_root:
    return call
   _tool.fn=_guarded(_original)
  register_foundation(mcp,_foundation_api)
+# Optional frozen state artifacts are distributed separately.
+_state_root=os.getenv('SUS_STATE_DATA','')
+if _state_root:
+ if not _foundation_root:raise ValueError('State queries require the shared foundation work slot')
+ # Fixed phase 2 tables share the existing process-wide dataset work slot.
+ from .state_activity import StateCandidate
+ _state_api=StateCandidate()
+ @mcp.tool()
+ def state_activity_page(kind:str,uf:str,year:int,family:str,code:str='',limit:int=100,cursor:str='')->dict:
+  """Separate fixed annual residence-UF CID or procedure record intervals. Not patients, prevalence, approved quantities or doses. DF/unknown excluded, not zero;2026Jan-Julpartial. No CID/procedure joint filter."""
+  with _foundation_api.work_slot():return _state_api.page(kind,uf,year,family,code,limit,cursor)
+ @mcp.tool()
+ def state_activity_methods()->dict:
+  """Read first: source gaps, CID placeholders, record units, dated references and disclosure-test limits for fixed state activity."""
+  return _state_api.methods()
+
 for t in mcp._tool_manager.list_tools():
  t.fn_metadata.arg_model.model_config={**t.fn_metadata.arg_model.model_config,'extra':'forbid','strict':True};t.fn_metadata.arg_model.model_rebuild(force=True);t.parameters=t.fn_metadata.arg_model.model_json_schema()
 
