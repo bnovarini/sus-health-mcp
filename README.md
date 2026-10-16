@@ -128,3 +128,7 @@ The older `bootstrap_source.py` file is a legacy copy of the same source. It is 
 ## Fixed state activity
 
 The optional `state_activity_page` and `state_activity_methods` tools add separate annual residence-UF CID and procedure source-record intervals. Read [STATE_ACTIVITY.md](STATE_ACTIVITY.md) for scope, units and limits. Set both `SUS_FOUNDATION_DATA` and `SUS_STATE_DATA` to separately supplied frozen artifacts. This repository contains only code and synthetic tests, not clinical data or private disclosure-review material.
+
+## Annual series and population context
+
+Optional `annual_activity_series` and `annual_series_methods` compose existing frozen state intervals with a stated population vintage. See [ANNUAL_SERIES.md](ANNUAL_SERIES.md). Set `SUS_SERIES_DATA` alongside the state/foundation artifact directories. No population workbook or clinical data is bundled here.
