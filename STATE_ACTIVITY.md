@@ -22,6 +22,22 @@ RD counts inpatient administrative source records, not deduplicated admissions. 
 
 The fixed source gaps and publisher-reconciliation limits remain in methods and results. In particular AM independent publisher record totals remain unverified, PA quantity reconciliation does not establish record-count agreement, and RD has documented differences. Processing-file years are not necessarily care dates. Full-year results must not be compared with partial 2026 as matched periods; coding changes and missing files can change recorded ascertainment.
 
+## Frozen source-file coverage
+
+The live methods and each page explicitly retain the following warning. These are gaps in the frozen collection, not a current availability claim or zero activity:
+
+| AM processing year | Billing-UF/month files absent from the collection |
+| --- | --- |
+| 2022 | AC June/September; AM January; RS June/July/August |
+| 2023 | AP March; MA April; PB July |
+| 2024 | AM October; AP September/October; RS April/May |
+| 2025 | AP June; TO May |
+| January-July 2026 | AL May; MA/PB/RO July |
+
+RD January-July 2026 lacks July AC and RR files. RD2022-2025 has all expected billing-UF/month slots. PA has all expected slots in each included processing-file window, sometimes through split files. Complete slots do not establish complete clinical ascertainment, valid residence or independent publisher reconciliation.
+
+A missing billing-UF file can affect residents of other states, not only residents of that billing state. AM has gaps in every included year, so cross-year AM activity is not automatically like-for-like. Missing files must not be treated as zero. Full processing years must not be compared with January-July 2026 as matched windows, and no annualization is implied. The separately supplied metadata includes the fixed source-period matrix; no private clinical table or patch list is stored here.
+
 ## Disclosure and serving
 
 Separate margins were checked jointly with existing fixed outputs and targeted complementary withholding. This is a bounded inference diagnostic, not an anonymity guarantee or proof against all external knowledge. Publisher files already expose fine activity. New revisions or new overlapping views need a fresh review. Never expose the private joint input, exact totals, blocklists or revision deltas through this adapter.
