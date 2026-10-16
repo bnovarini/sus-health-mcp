@@ -30,6 +30,11 @@ Questions are translated into the fixed tools below by your MCP client. The serv
 | `geographic_signals` | Annual municipality/CID record intervals |
 | `known_care_activity` | Reviewed E85.1 billing and residence-to-billing municipality flows |
 | `rare_disease_billing` | Related E85 codes, tafamidis 61 mg, and separate nonspecific workup billing views |
+| `reference_lookup` | Dated code/name lookup; ambiguous matches are listed |
+| `reference_resolve` | Exact dated/auxiliary/unmapped code labels |
+| `released_cells_page` | Cursor-bound complete retrieval of existing visible cells |
+| `research_methods` | Query-specific units, time basis, sources and limitations |
+| `foundation_coverage` | Reference vintages and frozen source coverage |
 
 ## Run the example client
 
@@ -49,7 +54,7 @@ python scripts/query_remote.py known_care_activity \
 
 On Windows, activate with `.venv\Scripts\activate`.
 
-Check the returned `truncated` flag. A truncated response is not a complete list. Use municipality filters where available rather than assuming the first 100 rows are exhaustive.
+Check the returned `truncated` flag. A truncated response is not a complete list. Use `released_cells_page` and follow `next_cursor` until null for complete retrieval of the existing visible lattice. Missing cells remain unknown, not zero. Complete file exports are owner-only; no public file-download route exists. See [FOUNDATION.md](FOUNDATION.md) for reference sources, self-hosting and residual bulk-access risk.
 
 ## Local setup without real data
 
