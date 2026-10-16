@@ -100,6 +100,22 @@ async def health(request):
   return JSONResponse({'ok':True,'stage':'registry_clinical_fixed_years_knowncare' if enabled else 'registry_only','full_clinical_mcp':False,'clinical2024_enabled':enabled,'clinical_years':check_artifact(os.getenv('SUS_CLINICAL_DATA','data/clinical-candidate'))['years'] if enabled else []})
  except Exception:return JSONResponse({'ok':False},status_code=503)
 
+# Phase1 additions share one work slot with the six existing tools.
+from .foundation.candidate_api import FoundationAPI
+from .foundation.mcp_foundation_candidate import register as register_foundation
+import functools
+_foundation_root=os.getenv('SUS_FOUNDATION_DATA','')
+if _foundation_root:
+ _foundation_api=FoundationAPI(_foundation_root,'/app/data',str(pathlib.Path(_foundation_root)/'serving-coverage-scientific.json'))
+ for _tool in mcp._tool_manager.list_tools():
+  _original=_tool.fn
+  def _guarded(original):
+   @functools.wraps(original)
+   def call(*args,**kwargs):
+    with _foundation_api.work_slot():return original(*args,**kwargs)
+   return call
+  _tool.fn=_guarded(_original)
+ register_foundation(mcp,_foundation_api)
 for t in mcp._tool_manager.list_tools():
  t.fn_metadata.arg_model.model_config={**t.fn_metadata.arg_model.model_config,'extra':'forbid','strict':True};t.fn_metadata.arg_model.model_rebuild(force=True);t.parameters=t.fn_metadata.arg_model.model_json_schema()
 
