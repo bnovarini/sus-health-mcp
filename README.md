@@ -124,3 +124,7 @@ Source families come from DATASUS. This project is not affiliated with DATASUS o
 The packaged unit tests use synthetic fixtures. Hosted-artifact integration checks are deliberately excluded because their data files are not distributed. No automatic vintage replacement is performed by the serving code.
 
 The older `bootstrap_source.py` file is a legacy copy of the same source. It is not needed for setup; use the normal `src/`, `tests/` and `scripts/` tree.
+
+## Fixed state activity
+
+The optional `state_activity_page` and `state_activity_methods` tools add separate annual residence-UF CID and procedure source-record intervals. Read [STATE_ACTIVITY.md](STATE_ACTIVITY.md) for scope, units and limits. Set both `SUS_FOUNDATION_DATA` and `SUS_STATE_DATA` to separately supplied frozen artifacts. This repository contains only code and synthetic tests, not clinical data or private disclosure-review material.
