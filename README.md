@@ -142,3 +142,12 @@ Read [PROVIDER_ACTIVITY.md](PROVIDER_ACTIVITY.md) for coverage, billing-record u
 ## Reference reimbursement and registered-capacity context
 
 The hosted service has 19 tools. `reimbursement_reference` returns dated separate SIGTAP SH/SA/SP reference components, not actual payments or prices. `provider_activity_context` places unchanged annual provider-procedure record intervals beside an explicitly chosen monthly CNES snapshot and that month's reference. See [REFERENCE_CONTEXT.md](REFERENCE_CONTEXT.md). No ratios, utilization/shortage scores, rankings, payment multiplication or new clinical cells are introduced. Annual records are not assumed to fall in the selected month; missing is unknown, not zero.
+
+
+
+
+## Data revisions
+
+
+
+- 17 October 2026: DATASUS re-published the SIH RD processing files for September 2025 through July 2026. The hosted RD2025 and RD2026 tables were re-anchored to the re-released files (net +91,269 source records; RD2026 loses 75 released cells that fell under the 20-record minimum). Earlier published RD2025/RD2026 intervals are superseded. Current release IDs: `clinical-2022-2026-SIMpreviews-20261017-rdrepub`, `phase2-state-record-margins-20261017-rdrepub`, `phase4-provider-20261017-rdrepub`, `registry-fixed2022-2026partial-20261017-rdrepub`.
