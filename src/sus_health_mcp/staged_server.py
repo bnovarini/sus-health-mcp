@@ -152,6 +152,20 @@ if os.getenv('SUS_ENABLE_PROVIDER')=='true':
   """Read first: fixed provider scope, source coverage, record units, identity/catchment limits and disclosure-test caveats."""
   return _provider_api.methods()
 
+# Private opt-in preparation; not configured on the live service.
+if os.getenv('SUS_ENABLE_CONTEXT')=='true':
+ from .activity_context import Tariffs,Context
+ _tariff_api=Tariffs(os.getenv('SUS_TARIFF_DATA','data/tariffs'))
+ _context_api=Context(_tariff_api,_provider_api,ROOT/'capacity.parquet',metadata())
+ @mcp.tool()
+ def reimbursement_reference(procedure:str,vintage:str)->dict:
+  """Dated SIGTAP SH/SA/SP national reference components. Explicit YYYYMM. Not actual payments, cost, private prices or billing eligibility."""
+  return _tariff_api.lookup(procedure,vintage)
+ @mcp.tool()
+ def provider_activity_context(family:str,year:int,facility:str,provider_municipality:str,procedure:str,snapshot_month:int,registry_family:str,limit:int=100,cursor:str='')->dict:
+  """Unchanged annual provider-procedure record interval beside one explicitly chosen CNES monthly registry family and SIGTAP vintage. No utilization, shortage, ranking, payment estimate or clinical cross-filter."""
+  with _foundation_api.work_slot():return _context_api.page(family,year,facility,provider_municipality,procedure,snapshot_month,registry_family,limit,cursor)
+
 for t in mcp._tool_manager.list_tools():
  t.fn_metadata.arg_model.model_config={**t.fn_metadata.arg_model.model_config,'extra':'forbid','strict':True};t.fn_metadata.arg_model.model_rebuild(force=True);t.parameters=t.fn_metadata.arg_model.model_json_schema()
 
