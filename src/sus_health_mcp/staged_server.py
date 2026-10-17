@@ -104,47 +104,53 @@ async def health(request):
 from .foundation.candidate_api import FoundationAPI
 from .foundation.mcp_foundation_candidate import register as register_foundation
 import functools
-_foundation_root=os.getenv('SUS_FOUNDATION_DATA','')
-if _foundation_root:
- _foundation_api=FoundationAPI(_foundation_root,'/app/data',str(pathlib.Path(_foundation_root)/'serving-coverage-scientific.json'))
- for _tool in mcp._tool_manager.list_tools():
-  _original=_tool.fn
-  def _guarded(original):
-   @functools.wraps(original)
-   def call(*args,**kwargs):
-    with _foundation_api.work_slot():return original(*args,**kwargs)
-   return call
-  _tool.fn=_guarded(_original)
- register_foundation(mcp,_foundation_api)
-# Optional frozen state artifacts are distributed separately.
-_state_root=os.getenv('SUS_STATE_DATA','')
-if _state_root:
- if not _foundation_root:raise ValueError('State queries require the shared foundation work slot')
- # Fixed phase 2 tables share the existing process-wide dataset work slot.
- from .state_activity import StateCandidate
- _state_api=StateCandidate()
- @mcp.tool()
- def state_activity_page(kind:str,uf:str,year:int,family:str,code:str='',limit:int=100,cursor:str='')->dict:
-  """Separate fixed annual residence-UF CID or procedure record intervals. Not patients, prevalence, approved quantities or doses. DF/unknown excluded, not zero;2026Jan-Julpartial. No CID/procedure joint filter."""
-  with _foundation_api.work_slot():return _state_api.page(kind,uf,year,family,code,limit,cursor)
- @mcp.tool()
- def state_activity_methods()->dict:
-  """Read first: source gaps, CID placeholders, record units, dated references and disclosure-test limits for fixed state activity."""
-  return _state_api.methods()
+_foundation_root=os.getenv('SUS_FOUNDATION_DATA','/app/data/foundation')
+_foundation_api=FoundationAPI(_foundation_root,'/app/data',str(pathlib.Path(_foundation_root)/'serving-coverage-scientific.json'))
+for _tool in mcp._tool_manager.list_tools():
+ _original=_tool.fn
+ def _guarded(original):
+  @functools.wraps(original)
+  def call(*args,**kwargs):
+   with _foundation_api.work_slot():return original(*args,**kwargs)
+  return call
+ _tool.fn=_guarded(_original)
+register_foundation(mcp,_foundation_api)
 
-_series_root=os.getenv('SUS_SERIES_DATA','')
-if _series_root:
- if not _state_root:raise ValueError('Annual series require the frozen state activity artifacts')
- from .annual_series import Series
- _series_api=Series(context_root=_series_root,state_api=_state_api)
+# Fixed phase 2 tables share the existing process-wide dataset work slot.
+from .state_activity import StateCandidate
+_state_api=StateCandidate()
+@mcp.tool()
+def state_activity_page(kind:str,uf:str,year:int,family:str,code:str='',limit:int=100,cursor:str='')->dict:
+ """Separate fixed annual residence-UF CID or procedure record intervals. Not patients, prevalence, approved quantities or doses. DF/unknown excluded, not zero;2026Jan-Julpartial. No CID/procedure joint filter."""
+ with _foundation_api.work_slot():return _state_api.page(kind,uf,year,family,code,limit,cursor)
+@mcp.tool()
+def state_activity_methods()->dict:
+ """Read first: source gaps, CID placeholders, record units, dated references and disclosure-test limits for fixed state activity."""
+ return _state_api.methods()
+
+from .annual_series import Series
+_series_api=Series(state_api=_state_api)
+@mcp.tool()
+def annual_activity_series(kind:str,uf:str,family:str,code:str,years:list[int]=[2022,2023,2024,2025])->dict:
+ """Exact-code annual source-record intervals with population context. Not patient rates or prevalence.2026partial has no annual rate. No sums, groups or automatic trend labels."""
+ with _foundation_api.work_slot():return _series_api.series(kind,uf,family,code,years)
+@mcp.tool()
+def annual_series_methods()->dict:
+ """Read first: population vintage, coverage gaps, rate rounding, record units and longitudinal limits."""
+ return _series_api.methods()
+
+# Provider additions are gated; no artifact or surface activates by import alone.
+if os.getenv('SUS_ENABLE_PROVIDER')=='true':
+ from .provider_activity import ProviderCandidate
+ _provider_api=ProviderCandidate()
  @mcp.tool()
- def annual_activity_series(kind:str,uf:str,family:str,code:str,years:list[int]=[2022,2023,2024,2025])->dict:
-  """Exact-code annual source-record intervals with population context. Not patient rates or prevalence.2026partial has no annual rate. No sums, groups or automatic trend labels."""
-  with _foundation_api.work_slot():return _series_api.series(kind,uf,family,code,years)
+ def provider_activity_page(kind:str,family:str,year:int,facility:str,provider_municipality:str,code:str='',limit:int=100,cursor:str='')->dict:
+  """Separate fixed annual provider CID, procedure or residence-UF record intervals. Exact source establishment and provider municipality required. No joint filters, totals, people or historical hospital identity. DF/unknown omitted, not zero."""
+  with _foundation_api.work_slot():return _provider_api.page(kind,family,year,facility,provider_municipality,code,limit,cursor)
  @mcp.tool()
- def annual_series_methods()->dict:
-  """Read first: population vintage, coverage gaps, rate rounding, record units and longitudinal limits."""
-  return _series_api.methods()
+ def provider_activity_methods()->dict:
+  """Read first: fixed provider scope, source coverage, record units, identity/catchment limits and disclosure-test caveats."""
+  return _provider_api.methods()
 
 for t in mcp._tool_manager.list_tools():
  t.fn_metadata.arg_model.model_config={**t.fn_metadata.arg_model.model_config,'extra':'forbid','strict':True};t.fn_metadata.arg_model.model_rebuild(force=True);t.parameters=t.fn_metadata.arg_model.model_json_schema()
