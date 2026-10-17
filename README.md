@@ -132,3 +132,9 @@ The optional `state_activity_page` and `state_activity_methods` tools add separa
 ## Annual series and population context
 
 Optional `annual_activity_series` and `annual_series_methods` compose existing frozen state intervals with a stated population vintage. See [ANNUAL_SERIES.md](ANNUAL_SERIES.md). Set `SUS_SERIES_DATA` alongside the state/foundation artifact directories. No population workbook or clinical data is bundled here.
+
+## Provider activity and administrative catchments
+
+The hosted service now has 17 tools. `provider_activity_methods` describes the fixed release; `provider_activity_page` returns separate provider-CID, provider-procedure or residence-UF interval margins. Exact establishment and provider municipality are required. No joint filters or exact totals.
+
+Read [PROVIDER_ACTIVITY.md](PROVIDER_ACTIVITY.md) for coverage, billing-record units, dated-registration identity limits and disclosure caveats. The tested known-support model adds no new or stronger small-cell positive bound, but 633 positive bounds already implied by earlier releases remain unchanged. This is not a general privacy guarantee or evidence of patient identification.
