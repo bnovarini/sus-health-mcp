@@ -138,3 +138,7 @@ Optional `annual_activity_series` and `annual_series_methods` compose existing f
 The hosted service now has 17 tools. `provider_activity_methods` describes the fixed release; `provider_activity_page` returns separate provider-CID, provider-procedure or residence-UF interval margins. Exact establishment and provider municipality are required. No joint filters or exact totals.
 
 Read [PROVIDER_ACTIVITY.md](PROVIDER_ACTIVITY.md) for coverage, billing-record units, dated-registration identity limits and disclosure caveats. The tested known-support model adds no new or stronger small-cell positive bound, but 633 positive bounds already implied by earlier releases remain unchanged. This is not a general privacy guarantee or evidence of patient identification.
+
+## Reference reimbursement and registered-capacity context
+
+The hosted service has 19 tools. `reimbursement_reference` returns dated separate SIGTAP SH/SA/SP reference components, not actual payments or prices. `provider_activity_context` places unchanged annual provider-procedure record intervals beside an explicitly chosen monthly CNES snapshot and that month's reference. See [REFERENCE_CONTEXT.md](REFERENCE_CONTEXT.md). No ratios, utilization/shortage scores, rankings, payment multiplication or new clinical cells are introduced. Annual records are not assumed to fall in the selected month; missing is unknown, not zero.
