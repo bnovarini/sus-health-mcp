@@ -1,14 +1,14 @@
 """Fixed annual series composition of already-frozen intervals. No listener or mutation."""
 import pathlib,json,hashlib,re
 from decimal import Decimal,ROUND_FLOOR,ROUND_CEILING
-R=pathlib.Path(__import__('os').environ.get('SUS_SERIES_DATA','data/series'))
+R=pathlib.Path(__import__('os').environ.get('SUS_SERIES_DATA','/app/data/series'))
 from .state_activity import StateCandidate
 def rate_bounds(lo,hi,pop):
  if not all(type(x)is int for x in [lo,hi,pop])or lo<0 or hi<lo or pop<=0:raise ValueError('Invalid interval/population')
  scale=Decimal(100000)/Decimal(pop);unit=Decimal('.001')
  return {'lower':str((Decimal(lo)*scale).quantize(unit,rounding=ROUND_FLOOR)),'upper':str((Decimal(hi)*scale).quantize(unit,rounding=ROUND_CEILING)),'unit':'Administrative source records per100,000 total residents;not people,incidence,prevalence or SUS utilization probability','rounding':'Outward to0.001;original record interval retained'}
 class Series:
- def __init__(self,state_root='data/state',context_root=R,state_api=None):
+ def __init__(self,state_root='/app/data/state',context_root=R,state_api=None):
   self.state=state_api if state_api is not None else StateCandidate(state_root);self.root=pathlib.Path(context_root);manifest=json.loads((self.root/'phase3-manifest.json').read_text())
   for name,digest in manifest['context_hashes'].items():
    if hashlib.sha256((self.root/name).read_bytes()).hexdigest()!=digest:raise ValueError('Context integrity')
