@@ -105,7 +105,7 @@ from .foundation.candidate_api import FoundationAPI
 from .foundation.mcp_foundation_candidate import register as register_foundation
 import functools
 _foundation_root=os.getenv('SUS_FOUNDATION_DATA','/app/data/foundation')
-_foundation_api=FoundationAPI(_foundation_root,'/app/data',str(pathlib.Path(_foundation_root)/'serving-coverage-scientific.json'))
+_data_root=os.getenv('SUS_DATA_ROOT','/app/data');_foundation_api=FoundationAPI(_foundation_root,_data_root,str(pathlib.Path(_foundation_root)/'serving-coverage-scientific.json'))
 for _tool in mcp._tool_manager.list_tools():
  _original=_tool.fn
  def _guarded(original):
@@ -165,6 +165,49 @@ if os.getenv('SUS_ENABLE_CONTEXT')=='true':
  def provider_activity_context(family:str,year:int,facility:str,provider_municipality:str,procedure:str,snapshot_month:int,registry_family:str,limit:int=100,cursor:str='')->dict:
   """Unchanged annual provider-procedure record interval beside one explicitly chosen CNES monthly registry family and SIGTAP vintage. No utilization, shortage, ranking, payment estimate or clinical cross-filter."""
   with _foundation_api.work_slot():return _context_api.page(family,year,facility,provider_municipality,procedure,snapshot_month,registry_family,limit,cursor)
+
+# Phase6 record templates: private opt-in; not configured on the live service.
+if os.getenv('SUS_ENABLE_RECORD_TEMPLATES')=='true':
+ from .record_templates import RecordTemplates
+ _templates_api=RecordTemplates()
+ @mcp.tool()
+ def record_template_page(template:str,uf:str,year:int,cid:str='',limit:int=100,cursor:str='')->dict:
+  """Private candidate: fixed RD record-template intervals by exact principal CID, residence UF and processing year. Not people, admissions, prevalence or outcomes."""
+  with _foundation_api.work_slot():return _templates_api.page(template,uf,year,cid,limit,cursor)
+ @mcp.tool()
+ def record_template_comparison(template:str,uf:str,year:int,cid_a:str,cid_b:str)->dict:
+  """Private candidate: exactly two exact CIDs side by side within one frozen template. Descriptive record intervals only."""
+  with _foundation_api.work_slot():return _templates_api.comparison(template,uf,year,cid_a,cid_b)
+ @mcp.tool()
+ def record_template_methods()->dict:
+  """Read first: scope, encodings, withholds, dictionary coverage and limits for the private record templates."""
+  return _templates_api.methods()
+
+# Phase7a SIM role margins: private opt-in; not configured on the live service.
+if os.getenv('SUS_ENABLE_SIM_TEMPLATES')=='true':
+ from .sim_templates import SimTemplates
+ _sim_api=SimTemplates()
+ @mcp.tool()
+ def sim_template_page(template:str,uf:str,year:int,cid:str='',limit:int=100,cursor:str='')->dict:
+  """Private candidate: SIM death-certificate role margins by exact CID, residence UF and death year. Certificates, not people; 2025/2026 preliminary; no rates or trends."""
+  with _foundation_api.work_slot():return _sim_api.page(template,uf,year,cid,limit,cursor)
+ @mcp.tool()
+ def sim_template_methods()->dict:
+  """Read first: scope, packed-field encodings, withholds, dictionary coverage and limits for the private SIM role margins."""
+  return _sim_api.methods()
+
+# Phase7c oncology reference: opt-in published-aggregate views; not configured before approval.
+if os.getenv('SUS_ENABLE_ONCO_REF')=='true':
+ from .onco_reference import OncoReference
+ _onco_api=OncoReference()
+ @mcp.tool()
+ def oncology_reference_page(view:str,limit:int=100,cursor:str='')->dict:
+  """DATASUS PAINEL-Oncologia published national aggregates, six fixed views by diagnosis year 2013-2026. Exact counts as published; 2026 partial; not rates or trends."""
+  with _foundation_api.work_slot():return _onco_api.page(view,limit,cursor)
+ @mcp.tool()
+ def oncology_reference_methods()->dict:
+  """Read first: sources, panel update date, view definitions and citation for the oncology reference."""
+  return _onco_api.methods()
 
 for t in mcp._tool_manager.list_tools():
  t.fn_metadata.arg_model.model_config={**t.fn_metadata.arg_model.model_config,'extra':'forbid','strict':True};t.fn_metadata.arg_model.model_rebuild(force=True);t.parameters=t.fn_metadata.arg_model.model_json_schema()
