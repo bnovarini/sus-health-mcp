@@ -1,4 +1,4 @@
-"""Adapters over existing frozen JSON outputs,no new combinations."""
+"""Private adapters over existing frozen JSON outputs,no new combinations."""
 import pathlib,json
 from .foundation import limit_check,cursor_decode,cursor_encode
 UF='AC AL AP AM BA CE ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO'.split()
