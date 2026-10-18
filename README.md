@@ -35,6 +35,16 @@ Questions are translated into the fixed tools below by your MCP client. The serv
 | `released_cells_page` | Cursor-bound complete retrieval of existing visible cells |
 | `research_methods` | Query-specific units, time basis, sources and limitations |
 | `foundation_coverage` | Reference vintages and frozen source coverage |
+| `sim_template_page` | SIM death-certificate record intervals by cause, role chain or reselection status |
+| `sim_template_methods` | Scope, encodings, withholds and dictionary coverage for the SIM views |
+| `oncology_reference_page` | Published PAINEL-Oncologia national aggregates in six fixed views |
+| `oncology_reference_methods` | Sources, panel update date and citation for the oncology reference |
+
+## Mortality and oncology reference
+
+`sim_template_page` returns interval-bounded counts of death-certificate records from the Mortality Information System (SIM), 2022-2024 final files and 2025-2026 preliminary files, by exact ICD-10 code and residence UF (Federal District excluded). The unit is a certificate record, never a person, and records are never linked across certificates or to any other dataset. Source files contain exact duplicate certificate rows, so counts are certificate records as filed, not deduplicated events. The 2025 and 2026 files are preliminary vintages that DATASUS revises. Cells under 20 records and targeted complementary margins are withheld; an absent cell is unknown, never zero. Three fixed views are served: underlying cause, certificate role chain and reselection status. Underlying-cause x co-recorded-cause pair detail is not served. `sim_template_methods` returns the scope, packed-field encodings, withholds and dictionary coverage (CNVS CID-10 v2019).
+
+`oncology_reference_page` republishes unchanged six national aggregate views from the DATASUS TabNet PAINEL-Oncologia panel, by diagnosis year 2013-2026 with 2026 partial: grouped and detailed diagnosis, residence UF, time to first treatment under Law 12,732/2012, treatment modality and staging. These are exact counts exactly as DATASUS publishes them (panel data updated 15 October 2026), not recomputed values. `oncology_reference_methods` returns the source URLs, panel update date and citation. Cite DATASUS when using these numbers.
 
 ## Run the example client
 
