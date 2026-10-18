@@ -1,5 +1,5 @@
-"""Reference layer: reference lookup and released-cell pagination.
-No network writes or new aggregates.
+"""Private phase1 candidate: reference lookup and released-cell pagination.
+No network writes,no new aggregates,no public activation included.
 """
 import base64,hashlib,json,pathlib,sqlite3,unicodedata,re
 KINDS={'cid','procedure','service','service_class','authorization','bed_detail','facility','municipality','facility_type','cnes_bed_type','cnes_bed_specialty'}
