@@ -1,4 +1,4 @@
-"""MCP registration. No listener,public route or deployment on import."""
+"""Private MCP registration. No listener,public route or deployment on import."""
 from typing import Literal,Union,Annotated
 from pydantic import BaseModel,ConfigDict,Field
 class StrictModel(BaseModel):
