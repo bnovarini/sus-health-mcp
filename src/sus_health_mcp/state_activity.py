@@ -1,6 +1,6 @@
-"""Fixed state activity adapter. Import starts no listener or public route."""
+"""Private phase2 candidate only. Import starts no listener or public route."""
 import pathlib,json,hashlib,base64,re,threading
-R=pathlib.Path(__import__('os').environ.get('SUS_STATE_DATA','data/state'))
+R=pathlib.Path(__import__('os').environ.get('SUS_STATE_DATA','/app/data/state'))
 UF='AC AL AP AM BA CE ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO'.split()
 def digest(p):
  h=hashlib.sha256()
