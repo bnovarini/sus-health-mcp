@@ -1,4 +1,4 @@
-"""Foundation API facade. Importing this module starts no server."""
+"""Private phase 1 API facade. Importing this module starts no server."""
 import pathlib,json,threading
 from contextlib import contextmanager
 from .foundation import References,ReleasedCells,resolve_code
@@ -37,4 +37,4 @@ class FoundationAPI:
    methods=self.methods.describe(kind,query);methods['label_reference']={'sha256':self.refs.meta['sha256'],'months':self.refs.meta.get('historical_periods',self.refs.meta.get('periods',[])),'meaning':'Reference labels only;annual processing-file cohorts cannot pick a single monthly code-validity vintage. Auxiliary/current labels are explicitly distinguished from dated definitions.'};return export_released(self.reader(kind),path,query,methods)
  def coverage(self):
   s=self.snapshot
-  return {'clinical':{k:v for k,v in s['SUS_CLINICAL_DATA']['clinical-metadata.json'].items() if k in ['release_id','years','approved_scopes','preview_scopes','warnings','clinical_sha256','grain']},'registry':{k:v for k,v in s['SUS_STAGED_DATA']['metadata.json'].items() if k in ['release_id','registry_years','registry_partial_years','registry_warnings','coverage','publisher_periods','gaps','capacity_sha256']},'reference':self.refs.meta,'candidate_status':'phase1_active;exports_owner_only;no_new_clinical_tables','new_clinical_tables':False,'new_totals':False,'data_scope':'existing frozen serving artifacts only'}
+  return {'clinical':{k:v for k,v in s['SUS_CLINICAL_DATA']['clinical-metadata.json'].items() if k in ['release_id','years','approved_scopes','preview_scopes','warnings','clinical_sha256','grain']},'registry':{k:v for k,v in s['SUS_STAGED_DATA']['metadata.json'].items() if k in ['release_id','registry_years','registry_partial_years','registry_warnings','coverage','publisher_periods','gaps','capacity_sha256']},'reference':self.refs.meta,'candidate_status':'phase1_active;exports_owner_only;no_new_clinical_tables','new_clinical_tables':False,'new_totals':False,'recurring_cost_increase':False}
