@@ -209,6 +209,23 @@ if os.getenv('SUS_ENABLE_ONCO_REF')=='true':
   """Read first: sources, panel update date, view definitions and citation for the oncology reference."""
   return _onco_api.methods()
 
+# RD co-diagnosis pair intervals: approved private release 2026-10-19.
+if os.getenv('SUS_ENABLE_CODIAGNOSIS')=='true':
+ from .codiagnosis import Codiagnosis
+ _cod_api=Codiagnosis()
+ @mcp.tool()
+ def codiagnosis_pairs(cid:str,uf:str='',year:int=0,limit:int=100,cursor:str='')->dict:
+  """Fixed RD co-diagnosis pair record intervals by exact CID, residence UF and processing year. Records, never people; no PA/AM or associated roles in v1."""
+  with _foundation_api.work_slot():return _cod_api.pairs(cid,uf,year,limit,cursor)
+ @mcp.tool()
+ def codiagnosis_coverage(cid:str='')->dict:
+  """Served vs withheld shares, pair-eligible share and period coverage for RD co-diagnosis; optional exact-CID slice."""
+  return _cod_api.coverage(cid)
+ @mcp.tool()
+ def codiagnosis_methods()->dict:
+  """Read first: scope, pair semantics, privacy floor, record-selection deviation and limits for RD co-diagnosis."""
+  return _cod_api.methods()
+
 for t in mcp._tool_manager.list_tools():
  t.fn_metadata.arg_model.model_config={**t.fn_metadata.arg_model.model_config,'extra':'forbid','strict':True};t.fn_metadata.arg_model.model_rebuild(force=True);t.parameters=t.fn_metadata.arg_model.model_json_schema()
 
