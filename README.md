@@ -39,12 +39,19 @@ Questions are translated into the fixed tools below by your MCP client. The serv
 | `sim_template_methods` | Scope, encodings, withholds and dictionary coverage for the SIM views |
 | `oncology_reference_page` | Published PAINEL-Oncologia national aggregates in six fixed views |
 | `oncology_reference_methods` | Sources, panel update date and citation for the oncology reference |
+| `codiagnosis_pairs` | Principal-secondary and secondary-secondary RD pair record intervals by exact CID, residence UF and year |
+| `codiagnosis_coverage` | Served vs withheld shares and optional exact-CID coverage for the pair views |
+| `codiagnosis_methods` | Scope, pair semantics, privacy floor and record-selection deviation for the pair views |
 
 ## Mortality and oncology reference
 
 `sim_template_page` returns interval-bounded counts of death-certificate records from the Mortality Information System (SIM), 2022-2024 final files and 2025-2026 preliminary files, by exact ICD-10 code and residence UF (Federal District excluded). The unit is a certificate record, never a person, and records are never linked across certificates or to any other dataset. Source files contain exact duplicate certificate rows, so counts are certificate records as filed, not deduplicated events. The 2025 and 2026 files are preliminary vintages that DATASUS revises. Cells under 20 records and targeted complementary margins are withheld; an absent cell is unknown, never zero. Three fixed views are served: underlying cause, certificate role chain and reselection status. Underlying-cause x co-recorded-cause pair detail is not served. `sim_template_methods` returns the scope, packed-field encodings, withholds and dictionary coverage (CNVS CID-10 v2019).
 
 `oncology_reference_page` republishes unchanged six national aggregate views from the DATASUS TabNet PAINEL-Oncologia panel, by diagnosis year 2013-2026 with 2026 partial: grouped and detailed diagnosis, residence UF, time to first treatment under Law 12,732/2012, treatment modality and staging. These are exact counts exactly as DATASUS publishes them (panel data updated 15 October 2026), not recomputed values. `oncology_reference_methods` returns the source URLs, panel update date and citation. Cite DATASUS when using these numbers.
+
+## Co-diagnosis pairs in admission records
+
+`codiagnosis_pairs` returns interval-bounded counts of co-recorded diagnosis pairs within single SIH RD (hospital admission) billing records, by exact ICD-10 code, residence UF and processing-file year (2022-2025 full; January-July 2026 partial; Federal District and unknown residence excluded). Two fixed views are served: principal x secondary (directed) and secondary x secondary (unordered). The unit is one billing record, never a person, and a pair is a record co-occurrence, not patient comorbidity prevalence. About 22.4% of RD records carry a valid principal-secondary pair. Cells under 20 records are withheld entirely; served cells are aligned 10-wide intervals, and an absent cell is unknown, never zero. Associated-role codes and the PA and AM families are excluded in v1, as is a principal repeated as its own secondary. Raw-row pair counts can sit up to +0.4% above live marginal counts (one-directional, from the shared record-selection rule). `codiagnosis_coverage` returns served and withheld shares globally or for one exact CID. `codiagnosis_methods` returns the full scope, pair semantics and limits.
 
 ## Run the example client
 
@@ -159,5 +166,6 @@ The hosted service has 19 tools. `reimbursement_reference` returns dated separat
 ## Data revisions
 
 
+- 19 October 2026: Co-diagnosis pair views added (`codiagnosis_pairs`, `codiagnosis_coverage`, `codiagnosis_methods`); release ID `codiagnosis-rd-20261019`. Existing tools unchanged.
 
 - 17 October 2026: DATASUS re-published the SIH RD processing files for September 2025 through July 2026. The hosted RD2025 and RD2026 tables were re-anchored to the re-released files (net +91,269 source records; RD2026 loses 75 released cells that fell under the 20-record minimum). Earlier published RD2025/RD2026 intervals are superseded. Current release IDs: `clinical-2022-2026-SIMpreviews-20261017-rdrepub`, `phase2-state-record-margins-20261017-rdrepub`, `phase4-provider-20261017-rdrepub`, `registry-fixed2022-2026partial-20261017-rdrepub`.
