@@ -158,12 +158,15 @@ Read [PROVIDER_ACTIVITY.md](PROVIDER_ACTIVITY.md) for coverage, billing-record u
 
 ## Reference reimbursement and registered-capacity context
 
-The hosted service has 19 tools. `reimbursement_reference` returns dated separate SIGTAP SH/SA/SP reference components, not actual payments or prices. `provider_activity_context` places unchanged annual provider-procedure record intervals beside an explicitly chosen monthly CNES snapshot and that month's reference. See [REFERENCE_CONTEXT.md](REFERENCE_CONTEXT.md). No ratios, utilization/shortage scores, rankings, payment multiplication or new clinical cells are introduced. Annual records are not assumed to fall in the selected month; missing is unknown, not zero.
+The hosted service has 29 tools. `reimbursement_reference` returns dated separate SIGTAP SH/SA/SP reference components, not actual payments or prices. `provider_activity_context` places unchanged annual provider-procedure record intervals beside an explicitly chosen monthly CNES snapshot and that month's reference. See [REFERENCE_CONTEXT.md](REFERENCE_CONTEXT.md). No ratios, utilization/shortage scores, rankings, payment multiplication or new clinical cells are introduced. Annual records are not assumed to fall in the selected month; missing is unknown, not zero.
 
 
 
 
 ## Data revisions
+
+- 27 October 2026: The fixed SIGTAP reference was extended through October 2026 (January 2022-October 2026; 58 monthly vintages). The September and October 2026 tables were added from the current DATASUS publisher archives. The previous 56 vintages were preserved unchanged. The fixed reference now contains 279,932 procedure-month rows and 1,330,130 dated procedure-relation rows. This is reference metadata only; no clinical or facility data changed. See [REFERENCE_CONTEXT.md](REFERENCE_CONTEXT.md) for the scope and interpretation limits.
+
 
 
 - 19 October 2026: Co-diagnosis pair views added (`codiagnosis_pairs`, `codiagnosis_coverage`, `codiagnosis_methods`); release ID `codiagnosis-rd-20261019`. Existing tools unchanged.
